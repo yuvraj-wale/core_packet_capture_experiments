@@ -1,23 +1,19 @@
-from scapy.all import sniff, wrpcap
+from scapy.all import sniff
 
 def packet_handler(packet):
-    packets.append(packet)
+    global packet_count
+    packet_count += 1
 
 def main():
-    global packets
-    packets = []
-    interface = 'lo'  # Loopback interface
-    port_filter = 'port 12001'  # Capture packets on port 12001
+    global packet_count
+    packet_count = 0
+    interface = 'lo'
 
-    print(f"Starting packet capture on interface {interface} with filter '{port_filter}'...")
+    print(f"Starting packet capture on interface {interface}...")
 
-    # Capture packets on the 'lo' interface
-    sniff(iface=interface, prn=packet_handler, store=True, count=0, filter=port_filter)
+    sniff(iface=interface, prn=packet_handler, store=False, count=0)
 
-    # Dump all captured packets to a pcap file
-    wrpcap('captured_packets.pcap', packets)
-
-    print("Packet capture complete. Data saved to captured_packets.pcap")
+    print(f"Packet capture complete. {packet_count} packets captured.")
 
 if __name__ == "__main__":
     main()
